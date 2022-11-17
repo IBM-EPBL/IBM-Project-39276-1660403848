@@ -8,14 +8,22 @@ from sklearn.preprocessing import LabelEncoder
 from skimage import feature
 from sklearn.metrics import confusion_matrix, recall_score, precision_score, accuracy_score, f1_score
 
-# Quantifying Images
-def quantify(img):
+# Quantifying Images to get features
+def get_features(img):
   features = feature.hog(img, orientations = 9, pixels_per_cell = (10,10), cells_per_block = (2 , 2), transform_sqrt = True, block_norm = "L1")
   return features
 
-
 le = LabelEncoder()     # Label Encoder
 
+# Preprocessing Images
+def preprocess_images(img, data):
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img = cv2.resize(img, (200, 200))
+    img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    features = get_features(img)
+    data.append(features)
+    return data
+  
 # Specifying Image Path
 fp_spiral_test_healthy = './TestData/spiral/healthy'
 fp_spiral_test_park = './TestData/spiral/parkinson'
@@ -28,22 +36,14 @@ testX = []
 testY = []
 
 for i in spiral_test_healthy:
-  img = cv2.imread(fp_spiral_test_healthy + '/' + i)
-  img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-  img = cv2.resize(img, (200,200))
-  img = cv2.threshold(img, 0,255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-  features = quantify(img)
-  testX.append(features)
-  testY.append('healthy')
+    image = cv2.imread(fp_spiral_test_healthy + '/' + i)
+    testX = preprocess_images(image, testX)
+    testY.append('healthy')
 
 for i in spiral_test_park:
-  img = cv2.imread(fp_spiral_test_park + '/' + i)
-  img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-  img = cv2.resize(img, (200,200))
-  img = cv2.threshold(img , 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-  features = quantify(img)
-  testX.append(features)
-  testY.append('parkinson')
+    image = cv2.imread(fp_spiral_test_park + '/' + i)
+    testX = preprocess_images(image, testX)
+    testY.append('parkinson')
 
 testY = le.fit_transform(testY) # Fit and Transforming / Encoding
 
