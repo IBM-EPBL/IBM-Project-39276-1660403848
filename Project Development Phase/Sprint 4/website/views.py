@@ -1,3 +1,10 @@
+from sklearn.preprocessing import LabelEncoder
+import json
+import numpy as np
+import pandas as pd
+import requests
+import cv2
+from skimage import feature
 from flask import Blueprint, render_template, request, url_for, redirect, session, flash
 from flask import current_app
 import os
@@ -6,6 +13,7 @@ from flask_wtf import FlaskForm
 from wtforms import FileField, SubmitField
 from werkzeug.utils import secure_filename
 # from auth import is_logged_in, current_user
+import config
 
 def is_logged_in(f):
     @wraps(f)
@@ -49,6 +57,12 @@ def home():
     return render_template("home.html", user=current_user(), form=form)
 
 
+def get_features(img):
+    features = feature.hog(img, orientations=9, pixels_per_cell=(
+        10, 10), cells_per_block=(2, 2), transform_sqrt=True, block_norm="L1")
+    return features
+
+
 @views.route('/spiral', methods=['GET','POST'])
 @is_logged_in
 def spiral():
@@ -57,15 +71,46 @@ def spiral():
     if request.method == 'POST':
 
         id = request.form.get('upload_image')
-        print(id)
+        print("id:" ,id)
         upload_image = request.files['upload_image']   
-        # print(upload_image.filename,"\n\n")
+        print(upload_image.filename,"\n\n")
+
         if(upload_image!=''):
             filename = secure_filename(upload_image.filename)
             filename_split = upload_image.filename.split('.')
             img_filename = str(current_user()) + "." + filename_split[-1]
-            filepath = os.path.join(current_app.config['UPLOAD_FOLDER_SPIRAL'],img_filename)
+            filepath = os.path.join(
+                current_app.config['UPLOAD_FOLDER_SPIRAL'], img_filename)
             upload_image.save(filepath)
+
+        token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
+                                    "apikey": config.API_KEY, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
+        mltoken = token_response.json()["access_token"]
+
+        header = {'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + mltoken}
+
+
+        le = LabelEncoder()
+        image = []
+        img = cv2.imread(filepath)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img = cv2.resize(img, (200, 200))
+        img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+        features = get_features(img)
+        image.append(features)
+
+        image = np.array(image, dtype=float)
+        payload_scoring = {"input_data": [{"values": (image.tolist())}]}
+        print(json.dumps(payload_scoring))
+        response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/cd63b4af-d1ca-428f-b0de-c1d878df86cd/predictions?version=2022-11-17',
+                                        json=payload_scoring, headers={'Authorization': 'Bearer ' + mltoken})
+
+        print("Scoring response")
+        if (response_scoring.json()['predictions'][0]['values'][0][0]):
+            print('Parkinson')
+        else:
+            print('Healthy')
         return redirect(url_for('views.predict_spiral'))
 
     return render_template("spiral.html", user=current_user(), form=form)
@@ -95,6 +140,36 @@ def wave():
             img_filename = str(current_user()) + "." + filename_split[-1]
             filepath = os.path.join(current_app.config['UPLOAD_FOLDER_WAVE'],img_filename)
             upload_image.save(filepath)
+
+
+            token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
+                                        "apikey": config.API_KEY, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
+            mltoken = token_response.json()["access_token"]
+
+            header = {'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + mltoken}
+
+
+            le = LabelEncoder()
+            image = []
+            img = cv2.imread(filepath)
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            img = cv2.resize(img, (200, 200))
+            img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+            features = get_features(img)
+            image.append(features)
+
+            image = np.array(image, dtype=float)
+            payload_scoring = {"input_data": [{"values": (image.tolist())}]}
+            print(json.dumps(payload_scoring))
+            response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/8d7f5128-75d6-4b69-a2b8-7e3d5df0e68c/predictions?version=2022-11-17', json=payload_scoring,
+                                            headers={'Authorization': 'Bearer ' + mltoken})
+            print("Scoring response")
+            print(response_scoring.json())
+            if (response_scoring.json()['predictions'][0]['values'][0][0]):
+                print('Parkinson')
+            else:
+                print('Healthy')
         return redirect(url_for('views.predict_wave'))
 
     return render_template("wave.html", user=current_user(), form=form)
