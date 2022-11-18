@@ -13,7 +13,8 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     app.config["SESSION_PERMANENT"] = False
     app.config["SESSION_TYPE"] = "filesystem"
-    app.config['UPLOAD_FOLDER'] = f"static/images"
+    app.config['UPLOAD_FOLDER_SPIRAL'] = "website/static/images/spiral"
+    app.config['UPLOAD_FOLDER_WAVE'] = "website/static/images/wave"
 
     db.init_app(app)
     Session(app)

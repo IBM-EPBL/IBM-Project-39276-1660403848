@@ -4,16 +4,24 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-
+# import ibm_db
 
 auth = Blueprint('auth', __name__)
-
+# try:
+#     conn = ibm_db.connect("DATABASE=bludb;HOSTNAME=2d46b6b4-cbf6-40eb-bbce-6251e6ba0300.bs2io90l08kqb1od8lcg.databases.appdomain.cloud;PORT=32328;SECURITY=SSL;SSLServerCertificate=DigiCertGlobalRootCA.crt;UID=gzs19461;PWD=Fr7LWoNyM0URum9L", "", "")
+# except:
+#     print("Unable to connect to DB: ", ibm_db.conn_error())
+            
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
+
+        
+
+
 
         user = User.query.filter_by(email=email).first()
         if user:
