@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+
+{% block content %}
+
+<h1 class="text-light text-center my-5">
+    Hello {{user.first_name}} <br />
+</h1>
+
+<br />
+<div class="container">
+    <form method="POST" class="mt-5 text-light text-center">
+        <div class="row mx-auto">
+            <input class="md-col-3" name="choice" type="radio" id="spiral" value="Spiral" />
+            <label class="md-col-9" for="spiral">Spiral</label>
+        </div>
+
+        <div class="row mx-auto">
+            <input name="choice" type="radio" id="wave" value="Wave" />
+            <label for="wave">Wave</label>
+        </div>
+        <div class="row mx-auto">
+            <input name="choice" type="radio" id="voice" value="Voice" />
+            <label for="voice">Voice</label>
+        </div>
+
+        <input type="submit" value="Proceed" class="btn btn-primary btn-block">
+    </form>
+
+</div>
+
+<!-- 
+<form method="POST" action="/predict" id="home_pred" class="mt-5 w-50 text-light text-center mx-auto">
+    <button type="submit" class="btn btn-primary btn-block btn-large" value="Predict">Predict</button>
+</form> -->
+
+{% endblock %}
