@@ -100,7 +100,8 @@ def predict_wave():
 def voice():
     form = UploadFileForm()
     if request.method == 'POST':
-        voice_input = request.form.get('voice_input')
+        inputs = [x for x in request.form.values()]   #Array to access inputs (1-22 is Input Values, 23 is Button)
+        print(inputs)
         return redirect(url_for('views.predict_voice'))
     return render_template("voice.html", user=current_user, form=form)
 
