@@ -1,7 +1,4 @@
-from sklearn.preprocessing import LabelEncoder
-import json
 import numpy as np
-import pandas as pd
 import requests
 import cv2
 from skimage import feature
@@ -57,11 +54,25 @@ def home():
     return render_template("home.html", user=current_user(), form=form)
 
 
+token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
+                                    "apikey": config.API_KEY, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
+mltoken = token_response.json()["access_token"]
+
 def get_features(img):
     features = feature.hog(img, orientations=9, pixels_per_cell=(
         10, 10), cells_per_block=(2, 2), transform_sqrt=True, block_norm="L1")
     return features
 
+def get_image(filepath):
+    image = []
+    img = cv2.imread(filepath)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    img = cv2.resize(img, (200, 200))
+    img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    features = get_features(img)
+    image.append(features)
+    image = np.array(image, dtype=float)
+    return image
 
 @views.route('/spiral', methods=['GET','POST'])
 @is_logged_in
@@ -83,30 +94,13 @@ def spiral():
                 current_app.config['UPLOAD_FOLDER_SPIRAL'], img_filename)
             upload_image.save(filepath)
 
-        token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
-                                    "apikey": config.API_KEY, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
-        mltoken = token_response.json()["access_token"]
-
-        header = {'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + mltoken}
-
-
-        le = LabelEncoder()
-        image = []
-        img = cv2.imread(filepath)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = cv2.resize(img, (200, 200))
-        img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-        features = get_features(img)
-        image.append(features)
-
-        image = np.array(image, dtype=float)
+        image = get_image(filepath)
         payload_scoring = {"input_data": [{"values": (image.tolist())}]}
-        print(json.dumps(payload_scoring))
         response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/cd63b4af-d1ca-428f-b0de-c1d878df86cd/predictions?version=2022-11-17',
                                         json=payload_scoring, headers={'Authorization': 'Bearer ' + mltoken})
 
         print("Scoring response")
+        print(response_scoring.json()) # Can get probability if needed
         if (response_scoring.json()['predictions'][0]['values'][0][0]):
             print('Parkinson')
         else:
@@ -142,30 +136,13 @@ def wave():
             upload_image.save(filepath)
 
 
-            token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
-                                        "apikey": config.API_KEY, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
-            mltoken = token_response.json()["access_token"]
+            image = get_image(filepath)
 
-            header = {'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + mltoken}
-
-
-            le = LabelEncoder()
-            image = []
-            img = cv2.imread(filepath)
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            img = cv2.resize(img, (200, 200))
-            img = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-            features = get_features(img)
-            image.append(features)
-
-            image = np.array(image, dtype=float)
             payload_scoring = {"input_data": [{"values": (image.tolist())}]}
-            print(json.dumps(payload_scoring))
             response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/8d7f5128-75d6-4b69-a2b8-7e3d5df0e68c/predictions?version=2022-11-17', json=payload_scoring,
                                             headers={'Authorization': 'Bearer ' + mltoken})
             print("Scoring response")
-            print(response_scoring.json())
+            print(response_scoring.json()) # Can get probability if needed
             if (response_scoring.json()['predictions'][0]['values'][0][0]):
                 print('Parkinson')
             else:
