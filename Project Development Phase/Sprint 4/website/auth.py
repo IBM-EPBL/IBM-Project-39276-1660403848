@@ -62,8 +62,8 @@ def register():
 
         #when registration is successful redirect to home
         return redirect(url_for('auth.login'))
-    flash("Registration failed. Please try again !")
-    return render_template('register.html', form=form)
+    error = "Registration failed. Please try again !"
+    return render_template('register.html', form=form, error=error)
 
 #User login
 
@@ -107,7 +107,7 @@ def is_logged_in(f):
             return f(*args, **kwargs)
         else:
             flash('Unauthorized, Please login', 'danger')
-            return redirect(url_for('login'))
+            return redirect(url_for('auth.login'))
     return wrap
 
 def current_user():
@@ -119,4 +119,4 @@ def current_user():
 def logout():
     session.clear()
     flash("Logged out successfully", "success")
-    return redirect(url_for('login'))
+    return redirect(url_for('auth.login'))
