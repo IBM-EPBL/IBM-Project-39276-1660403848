@@ -48,7 +48,7 @@ for i in wave_test_park:
 testY = le.fit_transform(testY)   # Fit and Transforming / Encoding
 
 # Loading Pre-Trained Pickle Model
-with open('./models/wave.pkl' , 'rb') as f:
+with open('./Local Models/wave.pkl' , 'rb') as f:
     model = pickle.load(f)
 
 pred = model.predict(testX)   # Predicting using model

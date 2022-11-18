@@ -48,7 +48,7 @@ for i in spiral_test_park:
 testY = le.fit_transform(testY) # Fit and Transforming / Encoding
 
 # Loading Pre-Trained Pickle Model
-with open('./models/spiral.pkl' , 'rb') as f:
+with open('./Local Models/spiral.pkl' , 'rb') as f:
     model = pickle.load(f)
 
 pred = model.predict(testX) # Predicting using model
