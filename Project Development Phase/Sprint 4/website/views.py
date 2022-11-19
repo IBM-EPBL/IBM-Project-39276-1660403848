@@ -54,9 +54,9 @@ def home():
     return render_template("home.html", user=current_user(), form=form)
 
 
-# token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
-#                                     "apikey": config.API_KEY, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
-# mltoken = token_response.json()["access_token"]
+token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
+                                    "apikey": config.API_KEY, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
+mltoken = token_response.json()["access_token"]
 
 def get_features(img):
     features = feature.hog(img, orientations=9, pixels_per_cell=(
@@ -95,15 +95,15 @@ def spiral():
             upload_image.save(filepath)
 
         image = get_image(filepath)
-        # payload_scoring = {"input_data": [{"values": (image.tolist())}]}
-        # response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/cd63b4af-d1ca-428f-b0de-c1d878df86cd/predictions?version=2022-11-17',
-        #                                 json=payload_scoring, headers={'Authorization': 'Bearer ' + mltoken})
+        payload_scoring = {"input_data": [{"values": (image.tolist())}]}
+        response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/cd63b4af-d1ca-428f-b0de-c1d878df86cd/predictions?version=2022-11-17',
+                                        json=payload_scoring, headers={'Authorization': 'Bearer ' + mltoken})
 
-        # print("Scoring response")
-        # print(response_scoring.json()) # Can get probability if needed
+        print("Scoring response")
+        print(response_scoring.json()) # Can get probability if needed
         is_parkinson = True
-        # if (response_scoring.json()['predictions'][0]['values'][0][0]):
-        if(True):
+        if (response_scoring.json()['predictions'][0]['values'][0][0]):
+        # if(True):
             print('Parkinson')
         else:
             is_parkinson = False
@@ -140,14 +140,14 @@ def wave():
 
             image = get_image(filepath)
 
-            # payload_scoring = {"input_data": [{"values": (image.tolist())}]}
-            # response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/8d7f5128-75d6-4b69-a2b8-7e3d5df0e68c/predictions?version=2022-11-17', json=payload_scoring,
-            #                                 headers={'Authorization': 'Bearer ' + mltoken})
-            # print("Scoring response")
-            # print(response_scoring.json()) # Can get probability if needed
-            # if (response_scoring.json()['predictions'][0]['values'][0][0]):
+            payload_scoring = {"input_data": [{"values": (image.tolist())}]}
+            response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/8d7f5128-75d6-4b69-a2b8-7e3d5df0e68c/predictions?version=2022-11-17', json=payload_scoring,
+                                            headers={'Authorization': 'Bearer ' + mltoken})
+            print("Scoring response")
+            print(response_scoring.json()) # Can get probability if needed
             is_parkinson = True
-            if(True):
+            if (response_scoring.json()['predictions'][0]['values'][0][0]):
+            # if(True):
                 print('Parkinson')
             else:
                 is_parkinson = False
