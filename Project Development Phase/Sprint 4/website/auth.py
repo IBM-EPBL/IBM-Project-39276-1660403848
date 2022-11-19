@@ -96,6 +96,7 @@ def login():
         return redirect(url_for('views.home'))
     else:
         error = "Incorrect username / password"
+        flash("Incorrect username / password", "error")
         return render_template('login.html', error=error)
 
 

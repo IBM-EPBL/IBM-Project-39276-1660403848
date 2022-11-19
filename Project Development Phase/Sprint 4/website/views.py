@@ -103,7 +103,6 @@ def spiral():
         print(response_scoring.json()) # Can get probability if needed
         is_parkinson = True
         if (response_scoring.json()['predictions'][0]['values'][0][0]):
-        # if(True):
             print('Parkinson')
         else:
             is_parkinson = False
@@ -147,7 +146,6 @@ def wave():
             print(response_scoring.json()) # Can get probability if needed
             is_parkinson = True
             if (response_scoring.json()['predictions'][0]['values'][0][0]):
-            # if(True):
                 print('Parkinson')
             else:
                 is_parkinson = False
@@ -211,7 +209,6 @@ def voice():
         
         is_parkinson = True
         if(response_scoring.json()['predictions'][0]['values'][0][0]):
-        # if(True):
             print('Parkinson')
         else:
             is_parkinson = False
