@@ -12,7 +12,6 @@ body {
     padding: 0;
     background: linear-gradient(120deg, #2980b9, #8e44ad);
     height: 100vh;
-    overflow: hidden;
 }
 
 .center {
@@ -37,13 +36,16 @@ body {
     box-sizing: border-box;
 }
 
-form .txt_field {
+form .txt_field,
+form .txt_field2 {
     position: relative;
     border-bottom: 2px solid #adadad;
     margin: 30px 0;
 }
 
-.txt_field input {
+
+.txt_field input,
+.txt_field2 input {
     width: 100%;
     padding: 0 5px;
     height: 40px;
@@ -52,6 +54,8 @@ form .txt_field {
     background: none;
     outline: none;
 }
+
+
 
 .txt_field label {
     position: absolute;
@@ -64,7 +68,8 @@ form .txt_field {
     transition: .5s;
 }
 
-.txt_field span::before {
+.txt_field span::before,
+.txt_field2 span::before {
     content: '';
     position: absolute;
     top: 40px;
@@ -75,8 +80,10 @@ form .txt_field {
     transition: .5s;
 }
 
+
 .txt_field input:focus~label,
-.txt_field input:valid~label {
+.txt_field input:valid~label,
+.txt_field2 {
     top: -5px;
     color: #2691d9;
 }

@@ -5,29 +5,32 @@
 
 {% block content %}
 
-<h1 class="text-light text-center my-5">
+<h1 class="text-light text-center mt-5">
     Hello {{session['name']}}! <br />
 </h1>
 
 <br />
-<div class="container">
-    <form method="POST" class="mt-5 text-light text-center max-auto">
-        <div class="row mx-auto">
-            <input class="md-col-6" name="choice" type="radio" id="spiral" value="Spiral" />
-            <label class="md-col-6" for="spiral">Spiral</label>
-        </div>
+<div class="center my-5">
+    <form method="POST" class="mx-auto my-3">
+        <div class="mx-auto row">
+            <div class="mx-auto">
+                <input name="choice" type="radio" id="spiral" value="Spiral" />
+                <label for="spiral">Spiral</label>
+            </div>
 
-        <div class="row mx-auto">
-            <input name="choice" type="radio" id="wave" value="Wave" />
-            <label for="wave">Wave</label>
-        </div>
-        <div class="row mx-auto">
-            <input name="choice" type="radio" id="voice" value="Voice" />
-            <label for="voice">Voice</label>
-        </div>
+            <div class="mx-auto">
+                <input name="choice" type="radio" id="wave" value="Wave" />
+                <label for="wave">Wave</label>
+            </div>
+            <div class="mx-auto">
+                <input name="choice" type="radio" id="voice" value="Voice" />
+                <label for="voice">Voice</label>
+            </div>
 
-        <input type="submit" value="Proceed" class="btn btn-primary">
+            <input type="submit" value="Proceed" class="btn btn-primary">
+        </div>
     </form>
+
 
 </div>
 
