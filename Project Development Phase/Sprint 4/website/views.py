@@ -135,7 +135,6 @@ def wave():
             filepath = os.path.join(current_app.config['UPLOAD_FOLDER_WAVE'],img_filename)
             upload_image.save(filepath)
 
-
             image = get_image(filepath)
 
             payload_scoring = {"input_data": [{"values": (image.tolist())}]}
@@ -166,6 +165,42 @@ def voice():
     if request.method == 'POST':
         inputs = [x for x in request.form.values()]   #Array to access inputs (1-22 is Input Values, 23 is Button)
         print(inputs)
+
+        payload_scoring = {"input_data": [{"fields": [['name', 
+        'MDVP:Fo(Hz)', 
+        'MDVP:Fhi(Hz)',
+        'MDVP:Flo(Hz)',
+        'MDVP:Jitter(%)',
+        'MDVP:Jitter(Abs)',
+        'MDVP:RAP',
+        'MDVP:PPQ',
+        'Jitter:DDP',
+        'MDVP:Shimmer',
+        'MDVP:Shimmer(dB)',
+        'Shimmer:APQ3',
+        'Shimmer:APQ5',
+        'MDVP:APQ',
+        'Shimmer:DDA',
+        'NHR',
+        'HNR',
+        'RPDE',
+        'DFA',
+        'spread1',
+        'spread2',
+        'D2',
+        'PPE']], "values": [['phon_R01_S01_1', 119.99200, 157.30200, 74.99700, 0.00784, 0.00007, 0.00370, 0.00554, 0.01109, 0.04374,
+        0.42600, 0.02182, 0.03130, 0.02971, 0.06545, 0.02211, 21.03300, 0.414783, 0.815285, -4.813031, 0.266482, 2.301442, 0.284654]]}]}
+
+        response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/parkinson_voice/predictions?version=2022-11-17', json=payload_scoring,
+        headers={'Authorization': 'Bearer ' + mltoken})
+        print("Scoring response")
+        print(response_scoring.json()) # Can get probability if needed
+        
+        if(response_scoring.json()['predictions'][0]['values'][0][0]):
+            print('Parkinson')
+        else:
+            print('Healthy')
+
         return redirect(url_for('views.predict_voice'))
     return render_template("voice.html", user=current_user(), form=form)
 
