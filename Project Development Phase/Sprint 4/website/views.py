@@ -54,9 +54,9 @@ def home():
     return render_template("home.html", user=current_user(), form=form)
 
 
-token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
-                                    "apikey": config.API_KEY, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
-mltoken = token_response.json()["access_token"]
+# token_response = requests.post('https://iam.cloud.ibm.com/identity/token', data={
+#                                     "apikey": config.API_KEY, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
+# mltoken = token_response.json()["access_token"]
 
 def get_features(img):
     features = feature.hog(img, orientations=9, pixels_per_cell=(
@@ -95,17 +95,20 @@ def spiral():
             upload_image.save(filepath)
 
         image = get_image(filepath)
-        payload_scoring = {"input_data": [{"values": (image.tolist())}]}
-        response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/cd63b4af-d1ca-428f-b0de-c1d878df86cd/predictions?version=2022-11-17',
-                                        json=payload_scoring, headers={'Authorization': 'Bearer ' + mltoken})
+        # payload_scoring = {"input_data": [{"values": (image.tolist())}]}
+        # response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/cd63b4af-d1ca-428f-b0de-c1d878df86cd/predictions?version=2022-11-17',
+        #                                 json=payload_scoring, headers={'Authorization': 'Bearer ' + mltoken})
 
-        print("Scoring response")
-        print(response_scoring.json()) # Can get probability if needed
-        if (response_scoring.json()['predictions'][0]['values'][0][0]):
+        # print("Scoring response")
+        # print(response_scoring.json()) # Can get probability if needed
+        is_parkinson = True
+        # if (response_scoring.json()['predictions'][0]['values'][0][0]):
+        if(True):
             print('Parkinson')
         else:
+            is_parkinson = False
             print('Healthy')
-        return redirect(url_for('views.predict_spiral'))
+        return render_template("predict_spiral.html", user=current_user(), is_parkinson=is_parkinson)
 
     return render_template("spiral.html", user=current_user(), form=form)
 
@@ -137,16 +140,19 @@ def wave():
 
             image = get_image(filepath)
 
-            payload_scoring = {"input_data": [{"values": (image.tolist())}]}
-            response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/8d7f5128-75d6-4b69-a2b8-7e3d5df0e68c/predictions?version=2022-11-17', json=payload_scoring,
-                                            headers={'Authorization': 'Bearer ' + mltoken})
-            print("Scoring response")
-            print(response_scoring.json()) # Can get probability if needed
-            if (response_scoring.json()['predictions'][0]['values'][0][0]):
+            # payload_scoring = {"input_data": [{"values": (image.tolist())}]}
+            # response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/8d7f5128-75d6-4b69-a2b8-7e3d5df0e68c/predictions?version=2022-11-17', json=payload_scoring,
+            #                                 headers={'Authorization': 'Bearer ' + mltoken})
+            # print("Scoring response")
+            # print(response_scoring.json()) # Can get probability if needed
+            # if (response_scoring.json()['predictions'][0]['values'][0][0]):
+            is_parkinson = True
+            if(True):
                 print('Parkinson')
             else:
+                is_parkinson = False
                 print('Healthy')
-        return redirect(url_for('views.predict_wave'))
+        return render_template("predict_wave.html", user=current_user(), is_parkinson = is_parkinson, image = image)
 
     return render_template("wave.html", user=current_user(), form=form)
 
@@ -161,10 +167,12 @@ def predict_wave():
 @views.route('/voice', methods=['GET','POST'])
 @is_logged_in
 def voice():
-    form = UploadFileForm()
     if request.method == 'POST':
-        inputs = [x for x in request.form.values()]   #Array to access inputs (1-22 is Input Values, 23 is Button)
-        print(inputs)
+        input = [x for x in request.form.values()]   #Array to access inputs (1-22 is Input Values, 23 is Button)
+        print(input)
+
+        for i in range(22):
+            input[i] = float(input[i])
 
         payload_scoring = {"input_data": [{"fields": [['name', 
         'MDVP:Fo(Hz)', 
@@ -188,21 +196,29 @@ def voice():
         'spread1',
         'spread2',
         'D2',
-        'PPE']], "values": [['phon_R01_S01_1', 119.99200, 157.30200, 74.99700, 0.00784, 0.00007, 0.00370, 0.00554, 0.01109, 0.04374,
-        0.42600, 0.02182, 0.03130, 0.02971, 0.06545, 0.02211, 21.03300, 0.414783, 0.815285, -4.813031, 0.266482, 2.301442, 0.284654]]}]}
+        'PPE']], "values": [['phon_R01_S01_1', input[0], input[1], input[2], input[3], input[4], input[5], input[6], input[7], 
+                            input[8], input[9], input[10], input[11], input[12], input[13], input[14], input[15], input[16], 
+                            input[17], input[18], input[19], input[20], input[21]]]}]}
 
-        response_scoring = requests.post('https://jp-tok.ml.cloud.ibm.com/ml/v4/deployments/parkinson_voice/predictions?version=2022-11-17', json=payload_scoring,
-        headers={'Authorization': 'Bearer ' + mltoken})
+        token_response2 = requests.post('https://iam.cloud.ibm.com/identity/token', data={
+                                    "apikey": config.API_KEY2, "grant_type": 'urn:ibm:params:oauth:grant-type:apikey'})
+        mltoken2 = token_response2.json()["access_token"]
+
+        response_scoring = requests.post('https://us-south.ml.cloud.ibm.com/ml/v4/deployments/6fa45890-ed15-4f02-9958-d1445fb00381/predictions?version=2022-11-19', json=payload_scoring,
+        headers={'Authorization': 'Bearer ' + mltoken2})
         print("Scoring response")
         print(response_scoring.json()) # Can get probability if needed
         
+        is_parkinson = True
         if(response_scoring.json()['predictions'][0]['values'][0][0]):
+        # if(True):
             print('Parkinson')
         else:
+            is_parkinson = False
             print('Healthy')
 
-        return redirect(url_for('views.predict_voice'))
-    return render_template("voice.html", user=current_user(), form=form)
+        return render_template("predict_voice.html", user=current_user(), is_parkinson = is_parkinson)
+    return render_template("voice.html", user=current_user())
 
 
 @views.route('/predict_voice', methods=['GET','POST'])

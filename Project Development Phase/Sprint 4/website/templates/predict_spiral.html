@@ -25,7 +25,15 @@
 
 <div class="form-group">
     <center>
-        {{ Result }}
+        {% if is_parkinson %}
+        <h2 class="text-danger text-center my-5">
+            Parkinson's Disease Detected
+        </h2>
+        {% else %}
+        <h2 class="text-success text-center my-5">
+            You are healthy!
+        </h2>
+        {% endif %}
     </center>
 </div>
 
