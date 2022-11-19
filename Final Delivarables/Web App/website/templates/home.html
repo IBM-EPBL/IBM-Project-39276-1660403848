@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+
+{% block content %}
+
+<h1 class="text-light text-center mt-5">
+    Hello {{session['name']}}! <br />
+</h1>
+
+<br />
+<div class="center my-5">
+    <form method="POST" class="mx-auto my-3">
+        <div class="mx-auto row">
+            <div class="mx-auto">
+                <input name="choice" type="radio" id="spiral" value="Spiral" />
+                <label for="spiral">Spiral</label>
+            </div>
+
+            <div class="mx-auto">
+                <input name="choice" type="radio" id="wave" value="Wave" />
+                <label for="wave">Wave</label>
+            </div>
+            <div class="mx-auto">
+                <input name="choice" type="radio" id="voice" value="Voice" />
+                <label for="voice">Voice</label>
+            </div>
+
+            <input type="submit" value="Proceed" class="btn btn-primary">
+        </div>
+    </form>
+
+
+</div>
+
+{% endblock %}

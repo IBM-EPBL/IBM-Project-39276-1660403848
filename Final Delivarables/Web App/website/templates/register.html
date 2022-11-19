@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% from "includes/_formhelpers.html" import render_field %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+
+
+
+<div class="center mt-5 ">
+    <h1>Register</h1>
+    <form method="POST">
+        <div class="txt_field2">
+            {{render_field(form.name)}}
+            <span></span>
+        </div>
+
+        <div class="txt_field2">
+            {{render_field(form.email)}}
+            <span></span>
+        </div>
+
+        <div class="txt_field2">
+            {{render_field(form.username)}}
+            <span></span>
+        </div>
+
+        <div class="txt_field2">
+            {{render_field(form.password)}}
+            <span></span>
+        </div>
+
+        <div class="txt_field2">
+            {{render_field(form.confirm)}}
+            <span></span>
+        </div>
+
+        <input type="submit" value="Register" class="my-2">
+    </form>
+</div>
+
+<br>
+{% endblock %}

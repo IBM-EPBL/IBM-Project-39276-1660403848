@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% from "includes/_formhelpers.html" import render_field %}
+{% block title %}Predict Using Voice{% endblock %}
+
+{% block content %}
+
+<h1 class="text-light text-center my-5">
+    Predict Using Voice <br />
+</h1>
+
+<div class="container">
+    <div class="row">
+        <form method="POST" id="home_pred" class="mt-3 w-100 text-light text-center mx-auto">
+            <h5> Upload Voice Input</h5>
+            <br />
+
+            <div class="row">
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-Fo" required>
+                    <label for="MDVP-Fo">MDVP - Fo(Hz):</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-Fhi" required>
+                    <label for="MDVP-Fhi">MDVP - Fhi(Hz):</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-Flo" required>
+                    <label for="MDVP-Flo">MDVP - Flo(Hz):</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-Jitter(%)" required>
+                    <label for="MDVP-Jitter(%)">MDVP - Jitter(%):</label>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-Jitter(Abs)" required>
+                    <label for="MDVP-Jitter(Abs)">MDVP - Jitter(Abs):</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-RAP" required>
+                    <label for="MDVP-RAP">MDVP - RAP:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-PPQ" required>
+                    <label for="MDVP-PPQ">MDVP - PPQ:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="Jitter-DDP" required>
+                    <label for="Jitter-DDP">Jitter - DDP:</label>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-Shimmer" required>
+                    <label for="MDVP-Shimmer">MDVP - Shimmer:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-Shimmer(dB)" required>
+                    <label for="MDVP-Shimmer(dB)">MDVP - Shimmer(dB):</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="Shimmer-APQ3" required>
+                    <label for="Shimmer-APQ3">Shimmer - APQ3:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="Shimmer-APQ5" required>
+                    <label for="Shimmer-APQ5">Shimmer - APQ5:</label>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="MDVP-APQ" required>
+                    <label for="MDVP-APQ">MDVP - APQ:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="Shimmer-DDA" required>
+                    <label for="Shimmer-DDA">Shimmer - DDA:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="NHR" required>
+                    <label for="NHR">NHR:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="HNR" required>
+                    <label for="HNR">HNR:</label>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="RPDE" required>
+                    <label for="RPDE">RPDE:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="DFA" required>
+                    <label for="DFA">DFA:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="spread1" required>
+                    <label for="spread1">Spread 1:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="spread2" required>
+                    <label for="spread2">Spread 2:</label>
+                </div>
+            </div>
+            <br />
+
+            <div class="row">
+                <div class="form-group md-col-3 mx-auto">
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="D2" required>
+                    <label for="D2">D2:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                    <input type="text" class="form-control" name="PPE" required>
+                    <label for="PPE">PPE:</label>
+                </div>
+                <div class="form-group md-col-3 mx-auto">
+                </div>
+            </div>
+            <br />
+
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary btn-large btn-block w-75 mx-auto" name="voice_submit"
+                    id="voice_submit" value="Predict Using Voice">
+            </div>
+            <br />
+        </form>
+    </div>
+</div>
+
+<div class="form-group">
+    <center><img class="img img-thumbnail" alt="No Image" src="{{path}}" onerror="this.style.display = 'none'">
+    </center>
+</div>
+{% endblock %}

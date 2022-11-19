@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+
+
+
+<div class="center">
+    <h1>Login</h1>
+    <form method="POST">
+        <div class="txt_field">
+            <input type="text" required name="email" value={{request.form.email}}>
+            <span></span>
+            <label>Email Address</label>
+        </div>
+        <div class="txt_field">
+            <input type="password" required name="password" value={{request.form.password}}>
+            <span></span>
+            <label>Password</label>
+        </div>
+        <input type="submit" value="Login">
+        <div class="signup_link">
+            Not a member? <a href="/register">Signup</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

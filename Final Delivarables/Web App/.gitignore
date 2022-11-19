@@ -1,0 +1,5 @@
+flask_session/
+instance/
+website/__pycache__/
+DigiCertGlobalRootCA.crt
+config.py
