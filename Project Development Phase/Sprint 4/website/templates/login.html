@@ -3,18 +3,27 @@
 {% block title %}Login{% endblock %}
 
 {% block content %}
-<form method="POST" class="mt-5 login text-light">
-    <h3 align="center">Login</h3>
-    <div>
-        <label for="email">Email Address</label>
-        <input type="text" placeholder="Email" required name="email" value={{request.form.email}}>
-    </div>
-    <br>
-    <div>
-        <label for="password">Password</label>
-        <input type="password" placeholder="Password" required name="password" value={{request.form.password}} required>
-    </div>
-    <br />
-    <button type="submit" class="btn btn-primary btn-block btn-large">Login</button>
-</form>
+
+
+
+<div class="center">
+    <h1>Login</h1>
+    <form method="POST">
+        <div class="txt_field">
+            <input type="text" required name="email" value={{request.form.email}}>
+            <span></span>
+            <label>Email Address</label>
+        </div>
+        <div class="txt_field">
+            <input type="password" required name="password" value={{request.form.password}}>
+            <span></span>
+            <label>Password</label>
+        </div>
+        <input type="submit" value="Login">
+        <div class="signup_link">
+            Not a member? <a href="/register">Signup</a>
+        </div>
+    </form>
+</div>
+
 {% endblock %}

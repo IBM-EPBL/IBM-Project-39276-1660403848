@@ -11,10 +11,10 @@
 
 <br />
 <div class="container">
-    <form method="POST" class="mt-5 text-light text-center">
+    <form method="POST" class="mt-5 text-light text-center max-auto">
         <div class="row mx-auto">
-            <input class="md-col-3" name="choice" type="radio" id="spiral" value="Spiral" />
-            <label class="md-col-9" for="spiral">Spiral</label>
+            <input class="md-col-6" name="choice" type="radio" id="spiral" value="Spiral" />
+            <label class="md-col-6" for="spiral">Spiral</label>
         </div>
 
         <div class="row mx-auto">
@@ -26,14 +26,9 @@
             <label for="voice">Voice</label>
         </div>
 
-        <input type="submit" value="Proceed" class="btn btn-primary btn-block">
+        <input type="submit" value="Proceed" class="btn btn-primary">
     </form>
 
 </div>
-
-<!-- 
-<form method="POST" action="/predict" id="home_pred" class="mt-5 w-50 text-light text-center mx-auto">
-    <button type="submit" class="btn btn-primary btn-block btn-large" value="Predict">Predict</button>
-</form> -->
 
 {% endblock %}
